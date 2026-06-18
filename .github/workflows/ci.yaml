@@ -1,0 +1,43 @@
+name: CI Pipeline #This is the name of the workflow. It will appear in the Actions tab of your GitHub repository.
+
+on:
+  push:
+    branches: [ main ] #This will trigger the workflow on pushes to the main branch
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest #This specifies the type of runner to execute the job. Here, we use the latest version of Ubuntu
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3 #This step checks out the code from the repository so that the workflow can access it. The v3 version of the checkout action is used here
+      with: 
+        token: ${{ secrets.GITHUB_TOKEN }} #This token is automatically provided by GitHub and allows the workflow to interact with the repository, such as pushing commits
+
+    - name: Run Test #This step runs the tests defined in your package.json. 
+      run: |
+        npm install
+        npm test 
+    - name: Login to Docker Hub
+      uses: docker/login-action@v2 #This step logs into Docker Hub using the credentials stored in GitHub Secrets. The v2 version of the login action is used here
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }} #These secrets should be set in your GitHub repository settings and contain your Docker Hub username and password, respectively
+    
+    - name: Build and Push Docker Image
+      uses: docker/build-push-action@v4 #This step builds the Docker image using the Dockerfile in the repository and pushes it to Docker Hub. The v4 version of the build-push action is used here
+      with:
+        context: .
+        push: true
+        tags: ${{ secrets.DOCKER_USERNAME }}/release-demo:${{ github.sha }} #The image is tagged with the GitHub SHA of the commit, which ensures that each image is uniquely identifiable and traceable back to the source code that generated it
+
+    - name: Update Kubernetes Manifests #This step updates the Kubernetes deployment manifest to use the new Docker image tag, commits the change, and pushes it back to the repository. This ensures that the deployment will use the latest image built in this workflow
+      run: |
+        sed -i "s|image: .*release-demo.*|image: ${{ secrets.DOCKER_USERNAME }}/release-demo:${{ github.sha }}|" k8s/deployment.yaml
+        git config user.email "ci@github-actions.com"
+        git config user.name "GitHub Actions"
+        git add k8s/deployment.yaml
+        git commit -m "CI: update image to ${{ github.sha }}"
+        git push
+
+        
