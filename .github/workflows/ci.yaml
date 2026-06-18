@@ -4,6 +4,12 @@ on:
   push:
     branches: [ main ] #This will trigger the workflow on pushes to the main branch
 
+env:
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+
+permissions:
+  contents: write
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest #This specifies the type of runner to execute the job. Here, we use the latest version of Ubuntu
