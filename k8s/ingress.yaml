@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: release-demo-ingress #A unique name for the ingress. This is how you will refer to it when managing it with kubectl
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /  #Extra configuration for the Ingress controller. This one tells nginx to rewrite the URL path
+spec:
+  rules:
+  - host: release-demo.local #The hostname that this Ingress responds to. We'll map this to minikube's IP in a later step
+    http:
+      paths:
+      - path: /
+        pathType: Prefix #The path type. Prefix means that any request that starts with /api will be routed to the service
+        backend:
+          service:
+            name: release-demo-svc #Which Service to forward traffic to — must match the name in service.yaml
+            port:
+              number: 80 #The port on the service to route traffic to. This should match the port defined in the service
