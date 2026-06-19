@@ -1,0 +1,33 @@
+# apiVersion: apps/v1 #Which Kubernetes API version handles this object. Deployments belong to apps/v1
+# kind: Deployment #The type of Kubernetes object. In this case, it's a Deployment, which manages a set of identical pods
+# metadata:   #Metadata about the deployment, including its name and labels
+#   name: release-demo #A unique name for the deployment. This is how you will refer to it when managing it with kubectl
+#   labels:
+#     app: release-demo #Labels are key-value pairs that help identify and organize Kubernetes objects. Here, we label this deployment with app: release-demo
+# spec: #The specification of the deployment, which describes the desired state of the deployment
+#   replicas: 2  #The number of pod replicas to run. Kubernetes will ensure that this many pods are always running
+#   selector: #The selector defines how the deployment finds which pods to manage. It matches the labels of the pods
+#     matchLabels: 
+#       app: release-demo #This selector matches pods that have the label app: release-demo, which we will define in the pod template below
+#   template:
+#     metadata:
+#       labels:
+#         app: release-demo  #This is the pod blueprint. Every pod Kubernetes creates will look exactly like this
+#     spec:
+#       containers:
+#       - name: release-demo  #The name of the container within the pod. This is how you will refer to it when managing it with kubectl
+#         image: pjajodia/release-demo:f582699bebcec8077d166d2f4e99a0e165bc3ebd
+#         ports:
+#         - containerPort: 3000 #The port that the container listens on. This should match the port your application is configured to use
+#         livenessProbe: #A liveness probe checks if the application is still running. If it fails, Kubernetes will restart the container
+#           httpGet:  #The liveness probe will perform an HTTP GET request to the specified path and port to check if the application is alive
+#             path: /health #The path that the liveness probe will request. This should be an endpoint in your application that returns a successful response when the app is healthy
+#             port: 3000
+#           initialDelaySeconds: 10
+#           periodSeconds: 5 #The liveness probe will wait 10 seconds after the container starts before performing the first check, and then it will check every 5 seconds thereafter
+#         readinessProbe: #A readiness probe checks if the application is ready to serve traffic. If it fails, Kubernetes will stop sending traffic to the pod until it passes
+#           httpGet:
+#             path: /health
+#             port: 3000
+#           initialDelaySeconds: 5
+#           periodSeconds: 3
