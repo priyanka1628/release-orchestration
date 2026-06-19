@@ -16,7 +16,7 @@ spec: #The specification of the deployment, which describes the desired state of
     spec:
       containers:
       - name: release-demo  #The name of the container within the pod. This is how you will refer to it when managing it with kubectl
-        image: pjajodia/release-demo:f582699bebcec8077d166d2f4e99a0e165bc3ebd
+        image: pjajodia/release-demo:96796e57224931c4d7d258d2815c878317f9a323
         ports:
         - containerPort: 3000 #The port that the container listens on. This should match the port your application is configured to use
         livenessProbe: #A liveness probe checks if the application is still running. If it fails, Kubernetes will restart the container
