@@ -2,11 +2,11 @@ const express = require('express'); //imports the Express library you just insta
 const app = express();
 
 app.get('/', (req, res) => {
-  res.json({ message: 'Hello from Release Orchestration Platform!', version: '2.0' }); //when someone hits the root URL, return a JSON message
+  res.json({ message: 'Hello from Release Orchestration Platform!', version: '3.0' }); //when someone hits the root URL, return a JSON message
 });
 
 app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'UP', version: '1.1' }); //this is the critical endpoint — Kubernetes will call this to know if your app is alive. It must return HTTP 200 when healthy
+  res.status(200).json({ status: 'UP', version: '3.0' }); //this is the critical endpoint — Kubernetes will call this to know if your app is alive. It must return HTTP 200 when healthy
 });
 
 const PORT = process.env.PORT || 3000; // reads the PORT from environment variables if set, otherwise defaults to 3000. 

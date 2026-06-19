@@ -39,11 +39,11 @@ jobs:
 
     - name: Update Kubernetes Manifests #This step updates the Kubernetes deployment manifest to use the new Docker image tag, commits the change, and pushes it back to the repository. This ensures that the deployment will use the latest image built in this workflow
       run: |
-        sed -i "s|image: .*release-demo.*|image: ${{ secrets.DOCKER_USERNAME }}/release-demo:${{ github.sha }}|" k8s/deployment.yaml
+        sed -i "s|image: pjajodia/release-demo:.*|image: pjajodia/release-demo:${{ github.sha }}|" k8s/deployment.yaml
         git config user.email "ci@github-actions.com"
         git config user.name "GitHub Actions"
         git add k8s/deployment.yaml
-        git commit -m "CI: update image to ${{ github.sha }}"
+        git diff --staged --quiet || git commit -m "CI: update image to ${{ github.sha }}"
         git push
 
         
