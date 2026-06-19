@@ -18,10 +18,10 @@ spec:
       containers:
 <<<<<<< HEAD
       - name: release-demo
-        image: pjajodia/release-demo:latest #The Docker image to use for the container. This should point to the image that contains your application code
+        image: pjajodia/release-demo:3242fcd71044c84bc597dc03ad4e06fce6a48365
 =======
       - name: release-demo  #The name of the container within the pod. This is how you will refer to it when managing it with kubectl
-        image: pjajodia/release-demo:96796e57224931c4d7d258d2815c878317f9a323
+        image: pjajodia/release-demo:3242fcd71044c84bc597dc03ad4e06fce6a48365
 >>>>>>> 10dd2828793a80971dc047a6e2dc23caf3927d13
         ports:
         - containerPort: 3000 #The port that the container listens on. This should match the port your application is configured to use
