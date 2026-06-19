@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1 #The Kubernetes API version that handles this object. Argo CD applications belong to argoproj.io/v1alpha1
+kind: Application #The type of Kubernetes object. In this case, it's an Application, which is a custom resource defined by Argo CD
+metadata:
+  name: release-demo #A unique name for the application. This is how you will refer to it when managing it with kubectl
+  namespace: argocd #The namespace in which the Argo CD application will be created. This should match the namespace where Argo CD is installed
+spec:
+  project: default #The Argo CD project that this application belongs to. Projects are a way to group applications and apply policies to them. Here, we are using the default project
+  source:
+    repoURL: https://github.com/priyanka1628/release-orchestration #The URL of the Git repository that contains the Kubernetes manifests for this application. This should point to the repository where your deployment, service, and ingress YAML files are stored
+    targetRevision: main #The branch, tag, or commit in the Git repository that you want to deploy. Here, we are using the main branch
+    path: k8s #The path within the Git repository where the Kubernetes manifests for this application are located. This should point to the directory that contains your deployment, service, and ingress YAML files
+  destination:
+    server: https://kubernetes.default.svc #The URL of the Kubernetes API server where the application will be deployed. This is the default service URL for the Kubernetes API server within the cluster
+    namespace: default #The namespace in the destination cluster where the application will be deployed. This should match the namespace where you want your application to run
+  syncPolicy:
+    automated:
+      prune: true #This setting tells Argo CD to automatically delete resources that are no longer defined in the Git repository. This helps keep the cluster clean and ensures that only the resources defined in Git are running
+      selfHeal: true #This setting tells Argo CD to automatically correct any drift between the live state of the application in the cluster and the desired state defined in Git. If any resources are modified outside of Git, Argo CD will revert them back to the desired state
