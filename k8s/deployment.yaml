@@ -1,34 +1,28 @@
-apiVersion: argoproj.io/v1alpha1 #The Kubernetes API version that handles this object. Argo CD applications belong to argoproj.io/v1alpha1
-kind: Application #The type of Kubernetes object. In this case, it's an Application, which is a custom resource defined by Argo CD
-kind: Rollout #The type of Kubernetes object. In this case, it's a Rollout, which is a custom resource defined by Argo Rollouts
-metadata: 
-  name: release-demo #A unique name for the rollout. This is how you will refer to it when managing it with kubectl
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: release-demo
   labels:
-    app: release-demo #Labels are key-value pairs that help identify and organize Kubernetes objects. Here, we label this rollout with app: release-demo
+    app: release-demo
 spec:
-  replicas: 5 #The number of pod replicas to run. Kubernetes will ensure that this many pods are always running
+  replicas: 5
   selector:
     matchLabels:
-      app: release-demo #This selector matches pods that have the label app: release-demo, which we will define in the pod template below
+      app: release-demo
   template:
     metadata:
       labels:
-        app: release-demo #This is the pod blueprint. Every pod Kubernetes creates will look exactly like this
+        app: release-demo
     spec:
       containers:
-<<<<<<< HEAD
       - name: release-demo
         image: pjajodia/release-demo:3242fcd71044c84bc597dc03ad4e06fce6a48365
-=======
-      - name: release-demo  #The name of the container within the pod. This is how you will refer to it when managing it with kubectl
-        image: pjajodia/release-demo:3242fcd71044c84bc597dc03ad4e06fce6a48365
->>>>>>> 10dd2828793a80971dc047a6e2dc23caf3927d13
         ports:
-        - containerPort: 3000 #The port that the container listens on. This should match the port your application is configured to use
+        - containerPort: 3000
         livenessProbe:
           httpGet:
             path: /health
-            port: 3000 #The port that the liveness probe will use to check if the application is alive. This should match the containerPort defined above
+            port: 3000
           initialDelaySeconds: 10
           periodSeconds: 5
         readinessProbe:
@@ -38,10 +32,10 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 3
   strategy:
-    canary: #The deployment strategy to use. In this case, we are using a canary strategy, which gradually rolls out the new version of the application to a subset of users before rolling it out to everyone
+    canary:
       steps:
-      - setWeight: 20 #The first step in the canary rollout. This sets the weight of the new version to 20%, meaning that 20% of the traffic will be routed to the new version and 80% will be routed to the old version
-      - pause: {duration: 30s} #The second step in the canary rollout. This pauses the rollout for 30 seconds, allowing time to monitor the new version and ensure that it is functioning correctly before proceeding to the next step
-      - setWeight: 50 #The third step in the canary rollout. This sets the weight of the new version to 50%, meaning that 50% of the traffic will be routed to the new version and 50% will be routed to the old version
-      - pause: {duration: 30s} #The fourth step in the canary rollout. This pauses the rollout for 30 seconds, allowing time to monitor the new version and ensure that it is functioning correctly before proceeding to the next step
-      - setWeight: 100 #The final step in the canary rollout. This sets the weight of the new version to 100%, meaning that all traffic will now be routed to the new version and the old version will be completely replaced
+      - setWeight: 20
+      - pause: {duration: 30s}
+      - setWeight: 50
+      - pause: {duration: 30s}
+      - setWeight: 100
