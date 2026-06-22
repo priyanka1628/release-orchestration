@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: release-demo  #The name of the container within the pod. This is how you will refer to it when managing it with kubectl
-        image: pjajodia/release-demo:36e7fd27fe873c21d28672b2a407d609090d3a95
+        image: pjajodia/release-demo:7004199d27f4d811e76128e1b37e7b720980f1bf
         ports:
         - containerPort: 3000 #The port that the container listens on. This should match the port your application is configured to use
         livenessProbe:
