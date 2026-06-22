@@ -32,10 +32,14 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 3
   strategy:
-    canary: #The deployment strategy to use. In this case, we are using a canary strategy, which gradually rolls out the new version of the application to a subset of users before rolling it out to everyone
-      steps:
-      - setWeight: 20 #The first step in the canary rollout. This sets the weight of the new version to 20%, meaning that 20% of the traffic will be routed to the new version and 80% will be routed to the old version
-      - pause: {duration: 30s} #The second step in the canary rollout. This pauses the rollout for 30 seconds, allowing time to monitor the new version and ensure that it is functioning correctly before proceeding to the next step
-      - setWeight: 50 #The third step in the canary rollout. This sets the weight of the new version to 50%, meaning that 50% of the traffic will be routed to the new version and 50% will be routed to the old version
-      - pause: {duration: 30s} #The fourth step in the canary rollout. This pauses the rollout for 30 seconds, allowing time to monitor the new version and ensure that it is functioning correctly before proceeding to the next step
-      - setWeight: 100 #The final step in the canary rollout. This sets the weight of the new version to 100%, meaning that all traffic will now be routed to the new version and the old version will be completely replaced
+    blueGreen:
+      activeService: release-demo-active #the Service that gets 100% of live traffic (Blue). Users hit this.
+      previewService: release-demo-preview #the Service pointing to the new version (Green). Only testers/QA hit this for validation before promotion.
+      autoPromotionEnabled: false #this is key. It means traffic does NOT switch automatically. A human must approve the promotion. This is your deployment approval gate — covers Feature 2 as well!
+    # canary: #The deployment strategy to use. In this case, we are using a canary strategy, which gradually rolls out the new version of the application to a subset of users before rolling it out to everyone
+    #   steps:
+    #   - setWeight: 20 #The first step in the canary rollout. This sets the weight of the new version to 20%, meaning that 20% of the traffic will be routed to the new version and 80% will be routed to the old version
+    #   - pause: {duration: 30s} #The second step in the canary rollout. This pauses the rollout for 30 seconds, allowing time to monitor the new version and ensure that it is functioning correctly before proceeding to the next step
+    #   - setWeight: 50 #The third step in the canary rollout. This sets the weight of the new version to 50%, meaning that 50% of the traffic will be routed to the new version and 50% will be routed to the old version
+    #   - pause: {duration: 30s} #The fourth step in the canary rollout. This pauses the rollout for 30 seconds, allowing time to monitor the new version and ensure that it is functioning correctly before proceeding to the next step
+    #   - setWeight: 100 #The final step in the canary rollout. This sets the weight of the new version to 100%, meaning that all traffic will now be routed to the new version and the old version will be completely replaced
