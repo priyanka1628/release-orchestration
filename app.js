@@ -2,7 +2,7 @@ const express = require('express'); //imports the Express library you just insta
 const app = express();
 
 app.get('/', (req, res) => {
-  res.json({ message: 'Hello from Release Orchestration Platform!', version: '4.0' }); //when someone hits the root URL, return a JSON message
+  res.json({ message: 'Hello from Release Orchestration Platform!', version: '4.0-green' }); //when someone hits the root URL, return a JSON message
 });
 
 app.get('/health', (req, res) => {
