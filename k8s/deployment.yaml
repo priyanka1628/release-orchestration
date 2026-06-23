@@ -18,7 +18,7 @@ spec:
       - name: dockerhub-secret
       containers:
       - name: release-demo  #The name of the container within the pod. This is how you will refer to it when managing it with kubectl
-        image: pjajodia/release-demo:a920ed1445fe8c1e6e74fb16b18d04d7fe6da3a5
+        image: pjajodia/release-demo:19f6bb085f73e73042971acfa0ee6ece4fae9578
         ports:
         - containerPort: 3000 #The port that the container listens on. This should match the port your application is configured to use
         livenessProbe:
