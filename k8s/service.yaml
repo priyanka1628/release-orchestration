@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: release-demo-active  #Argo Rollouts points this to the Blue (stable) pods
+spec:
   selector:
     app: release-demo #This selector matches the pods that have the label app: release-demo, which we defined in the deployment. This tells the service which pods to route traffic to
   ports:
