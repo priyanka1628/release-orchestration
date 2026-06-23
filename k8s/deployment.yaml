@@ -14,9 +14,11 @@ spec:
       labels:
         app: release-demo #This is the pod blueprint. Every pod Kubernetes creates will look exactly like this
     spec:
+      imagePullSecrets:
+      - name: dockerhub-secret
       containers:
       - name: release-demo  #The name of the container within the pod. This is how you will refer to it when managing it with kubectl
-        image: pjajodia/release-demo:f6b7acafac664f869f9afb509411d6fab6778a05
+        image: pjajodia/release-demo:7004199d27f4d811e76128e1b37e7b720980f1bf
         ports:
         - containerPort: 3000 #The port that the container listens on. This should match the port your application is configured to use
         livenessProbe:
