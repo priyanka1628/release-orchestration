@@ -17,6 +17,8 @@ spec:
         app: release-demo
         env: prod
     spec:
+      imagePullSecrets:
+      - name: dockerhub-secret
       containers:
       - name: release-demo
         image: pjajodia/release-demo:latest
