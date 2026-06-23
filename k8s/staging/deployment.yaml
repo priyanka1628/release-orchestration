@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: release-demo
+  namespace: staging
+  labels:
+    app: release-demo
+    env: staging
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: release-demo
+  template:
+    metadata:
+      labels:
+        app: release-demo
+        env: dev
+    spec:
+      containers:
+      - name: release-demo
+        image: pjajodia/release-demo:latest
+        ports:
+        - containerPort: 3000
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 3
+  strategy:
+    blueGreen:
+      activeService: release-demo-active
+      previewService: release-demo-preview
+      autoPromotionEnabled: false
